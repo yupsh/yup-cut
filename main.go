@@ -7,10 +7,10 @@ import (
 	"github.com/spf13/afero"
 )
 
-// appVersion is the binary's version string. It defaults to "dev" for local
+// version is the binary's version string. It defaults to "dev" for local
 // builds and is overridden at release time via the linker:
-// -ldflags "-X main.appVersion=<version>" (set by goreleaser).
-var appVersion = "dev"
+// -ldflags "-X main.version=<version>" (set by goreleaser).
+var version = "dev"
 
 // Indirections so main's wiring (version, args → run → exit code) is testable
 // without spawning a subprocess. Overridden in tests, restored after.
@@ -20,5 +20,5 @@ var (
 )
 
 func main() {
-	osExit(runCLI(appVersion, os.Args, os.Stdin, os.Stdout, os.Stderr, afero.NewOsFs()))
+	osExit(runCLI(version, os.Args, os.Stdin, os.Stdout, os.Stderr, afero.NewOsFs()))
 }
