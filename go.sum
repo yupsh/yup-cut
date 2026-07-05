@@ -10,6 +10,8 @@ github.com/gloo-foo/framework v0.1.0 h1:cCFe0tbxIAlErl4fvW0RJZ3ogUGBSH4xUOKc0if8
 github.com/gloo-foo/framework v0.1.0/go.mod h1:r8TPoqGh+8WuoL+psZScv49zNtI0qc49kWbg7E/gO8k=
 github.com/gloo-foo/testable v0.1.0 h1:hMhgqPbALsb1JMbVpXMyjxulRFOP60y2c3v5RiweAIM=
 github.com/gloo-foo/testable v0.1.0/go.mod h1:+e88aL6kEx0vwFrHJwt24JUJIBI2GZoUa9OlyDbfu48=
+github.com/gomatic/go-error v0.3.0 h1:RTmlkCRDSaIaqhDK2VCKWiiiCRDI0Egesv/EoJLWtaI=
+github.com/gomatic/go-error v0.3.0/go.mod h1:+PAmcazlzCIDFBglesekV1LUQTEaQB+5801gftMxgZY=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/spf13/afero v1.15.0 h1:b/YBCLWAJdFWJTN9cLhiXXcD7mzKn9Dm86dNnfyQw1I=

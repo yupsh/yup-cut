@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"errors"
+	"strconv"
 	"testing"
 
 	clix "github.com/gloo-foo/cli"
@@ -92,8 +93,8 @@ func TestParseFields(t *testing.T) {
 
 func TestParseFieldsError(t *testing.T) {
 	cases := []struct {
-		want error
-		list string
+		wantErr error
+		list    string
 	}{
 		{ErrOpenEndedField, "1-"},
 		{ErrInvalidFields, "x"},
@@ -102,10 +103,22 @@ func TestParseFieldsError(t *testing.T) {
 	}
 	for _, tc := range cases {
 		t.Run(tc.list, func(t *testing.T) {
-			if _, err := parseFields(fieldList(tc.list)); !errors.Is(err, tc.want) {
-				t.Fatalf("err=%v, want %v", err, tc.want)
+			if _, err := parseFields(fieldList(tc.list)); !errors.Is(err, tc.wantErr) {
+				t.Fatalf("err=%v, want %v", err, tc.wantErr)
 			}
 		})
+	}
+}
+
+// TestParseFieldsWrapsCause asserts an invalid numeral's parse failure keeps the
+// strconv cause matchable alongside the ErrInvalidFields sentinel.
+func TestParseFieldsWrapsCause(t *testing.T) {
+	_, err := parseFields(fieldList("x"))
+	if !errors.Is(err, ErrInvalidFields) {
+		t.Fatalf("err=%v, want ErrInvalidFields", err)
+	}
+	if !errors.Is(err, strconv.ErrSyntax) {
+		t.Fatalf("err=%v, want wrapped strconv.ErrSyntax cause", err)
 	}
 }
 

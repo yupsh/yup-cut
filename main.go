@@ -2,12 +2,12 @@
 package main
 
 import (
-	"fmt"
 	"strconv"
 	"strings"
 
 	clix "github.com/gloo-foo/cli"
 	command "github.com/gloo-foo/cmd-cut"
+	errs "github.com/gomatic/go-error"
 	urf "github.com/urfave/cli/v3"
 )
 
@@ -24,20 +24,14 @@ const (
 	flagComplement = "complement"
 )
 
-// Error is the sentinel error type emitted by this package, so every failure
-// path is comparable with errors.Is.
-type Error string
-
-func (e Error) Error() string { return string(e) }
-
 const (
 	// ErrInvalidFields reports a malformed -f/--fields list part.
-	ErrInvalidFields Error = "invalid field list"
+	ErrInvalidFields errs.Const = "invalid field list"
 	// ErrOpenEndedField reports a "-f N-" open-ended-to-end field range. The
 	// pinned cmd-cut field API selects fields by explicit 1-based position and
 	// cannot express an unbounded upper end; -c/-b accept "N-" since they take
 	// a spec string. See cmd-cut COMPATIBILITY.md.
-	ErrOpenEndedField Error = "open-ended field range (N-) is not supported; list the fields explicitly or use -c/-b"
+	ErrOpenEndedField errs.Const = "open-ended field range (N-) is not supported; list the fields explicitly or use -c/-b"
 )
 
 // synopsis is the multi-line --help usage block. urfave/cli indents the whole
@@ -202,7 +196,7 @@ func rangePositions(lo, hi command.CutField) []command.CutField {
 func atoi(bound rangeBound) (int, error) {
 	n, err := strconv.Atoi(strings.TrimSpace(string(bound)))
 	if err != nil {
-		return 0, fmt.Errorf("%w: %s", ErrInvalidFields, string(bound))
+		return 0, ErrInvalidFields.With(err, string(bound))
 	}
 	return n, nil
 }
