@@ -24,4 +24,8 @@ soft-baseline:
   # enumdiscrim) await adjudication; rollout rules (errtest, errtested,
   # testfile, clidomain, cliflags, clilayout, fuzzreq, exhaustive) gate
   # again at zero.
-  yze/invariant: 1
+  #
+  # 2026-08-03: both documented invariants (ErrOpenEndedField rejecting an
+  # unbounded field range, flags building fresh instances per call) are now
+  # named by tests, so the count ratchets 1 -> 0 and the rule gates again.
+  yze/invariant: 0

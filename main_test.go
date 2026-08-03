@@ -96,7 +96,6 @@ func TestParseFieldsError(t *testing.T) {
 		wantErr error
 		list    string
 	}{
-		{ErrOpenEndedField, "1-"},
 		{ErrInvalidFields, "x"},
 		{ErrInvalidFields, "x-3"},
 		{ErrInvalidFields, "3-x"},
@@ -119,6 +118,45 @@ func TestParseFieldsWrapsCause(t *testing.T) {
 	}
 	if !errors.Is(err, strconv.ErrSyntax) {
 		t.Fatalf("err=%v, want wrapped strconv.ErrSyntax cause", err)
+	}
+}
+
+// TestErrOpenEndedFieldRejectsUnboundedFieldRange asserts the invariant
+// documented on ErrOpenEndedField: the pinned cmd-cut field API cannot express
+// an unbounded upper end, so "-f N-" is rejected with that sentinel, while a
+// bounded range still expands and -c/-b keep accepting "N-" verbatim.
+func TestErrOpenEndedFieldRejectsUnboundedFieldRange(t *testing.T) {
+	if _, err := parseFields(fieldList("2-")); !errors.Is(err, ErrOpenEndedField) {
+		t.Fatalf("parseFields(%q) err=%v, want ErrOpenEndedField", "2-", err)
+	}
+	if got, err := parseFields(fieldList("2-3")); err != nil || len(got) != 2 {
+		t.Fatalf("parseFields(%q)=%v err=%v, want the bounded range expanded", "2-3", got, err)
+	}
+	for _, flag := range []string{"-c", "-b"} {
+		if _, err := options(parse(t, name, flag, "2-")); err != nil {
+			t.Fatalf("options(%s 2-) err=%v, want the spec passed through verbatim", flag, err)
+		}
+	}
+}
+
+// TestFlagsBuildsFreshInstancesPerCall asserts the invariant documented on
+// flags: every call yields distinct flag instances, so urfave/cli's sticky
+// "was set" state never leaks from one parsed command into the next.
+func TestFlagsBuildsFreshInstancesPerCall(t *testing.T) {
+	first, second := flags(), flags()
+	if len(first) != len(second) {
+		t.Fatalf("flags() lengths differ: %d vs %d", len(first), len(second))
+	}
+	for i := range first {
+		if first[i] == second[i] {
+			t.Fatalf("flags()[%d] is the same instance across calls", i)
+		}
+	}
+	if !parse(t, name, "-d", ":").IsSet(flagDelimiter) {
+		t.Fatal("IsSet(delimiter)=false right after -d was passed")
+	}
+	if parse(t, name).IsSet(flagDelimiter) {
+		t.Fatal("IsSet(delimiter)=true on a fresh parse, want no leaked set state")
 	}
 }
 
