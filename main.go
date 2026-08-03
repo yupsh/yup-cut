@@ -61,19 +61,35 @@ func flags() []urf.Flag {
 			Name:    flagDelimiter,
 			Aliases: []string{"d"},
 			Usage:   "use DELIM instead of TAB for field delimiter",
+			Sources: urf.EnvVars("YUP_CUT_DELIMITER"),
+			Value:   "",
 		},
 		&urf.StringFlag{
 			Name:    flagFields,
 			Aliases: []string{"f"},
 			Usage:   "select only these fields (comma-separated list)",
+			Sources: urf.EnvVars("YUP_CUT_FIELDS"),
+			Value:   "",
 		},
 		&urf.StringFlag{
 			Name:    flagChars,
 			Aliases: []string{"c"},
 			Usage:   "select only these characters (e.g. 1-3,5)",
+			Sources: urf.EnvVars("YUP_CUT_CHARACTERS"),
+			Value:   "",
 		},
-		&urf.StringFlag{Name: flagBytes, Aliases: []string{"b"}, Usage: "select only these bytes (e.g. 1-3,5)"},
-		&urf.BoolFlag{Name: flagComplement, Usage: "complement the set of selected bytes, characters or fields"},
+		&urf.StringFlag{
+			Name:    flagBytes,
+			Aliases: []string{"b"},
+			Usage:   "select only these bytes (e.g. 1-3,5)",
+			Sources: urf.EnvVars("YUP_CUT_BYTES"),
+			Value:   "",
+		},
+		&urf.BoolFlag{
+			Name:    flagComplement,
+			Usage:   "complement the set of selected bytes, characters or fields",
+			Sources: urf.EnvVars("YUP_CUT_COMPLEMENT"),
+		},
 	}
 }
 
