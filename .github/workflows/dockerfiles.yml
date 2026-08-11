@@ -24,7 +24,7 @@ on:
       - ".standards.yaml"
       - ".github/workflows/dockerfiles.yml"
   schedule:
-    - cron: "50 13 * * 6"
+    - cron: "55 19 15 * *"
   workflow_dispatch:
 concurrency:
   group: dockerfiles-${{ github.ref }}
