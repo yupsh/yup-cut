@@ -1,0 +1,45 @@
+# Managed by distribute-build; edits are replaced
+name: dockerfiles
+on:
+  push:
+    branches: [main]
+    paths:
+      - "**Dockerfile"
+      - "**Dockerfile.*"
+      - "**.dockerfile"
+      - "docker/**"
+      - ".dockerignore"
+      - ".hadolint*"
+      - ".standards.yaml"
+      - ".github/workflows/dockerfiles.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "**Dockerfile"
+      - "**Dockerfile.*"
+      - "**.dockerfile"
+      - "docker/**"
+      - ".dockerignore"
+      - ".hadolint*"
+      - ".standards.yaml"
+      - ".github/workflows/dockerfiles.yml"
+  schedule:
+    - cron: "55 19 15 * *"
+  workflow_dispatch:
+concurrency:
+  group: dockerfiles-${{ github.ref }}
+  cancel-in-progress: true
+permissions:
+  contents: read
+jobs:
+  dockerfiles:
+    # A scheduled run re-lints against the floating ci/dockerfiles@v2 image with no push;
+    # distribute substitutes the per-repo cron above. Skip forks (no-op for push/PR).
+    if: github.event_name != 'schedule' || github.event.repository.fork == false
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: nicerobot/tools.build/ci/dockerfiles@v2
