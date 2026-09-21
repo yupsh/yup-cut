@@ -6,7 +6,7 @@ require (
 	github.com/gloo-foo/cmd-cut v0.1.23
 	github.com/gomatic/go-error v0.3.18
 	github.com/spf13/afero v1.15.0
-	github.com/urfave/cli/v3 v3.11.0
+	github.com/urfave/cli/v3 v3.12.0
 )
 
 require github.com/gloo-foo/framework v0.1.28 // indirect
